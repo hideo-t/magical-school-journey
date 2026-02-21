@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>魔法学校への旅</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-card: #1a1a2e;
+      --text-primary: #e0ddd5;
+      --text-secondary: #8a8a9a;
+      --accent: #4a9eff;
+      --accent-dim: #2a5a9a;
+      --gold: #c4a35a;
+      --chapter-border: #2a2a3e;
+      --serif: 'Noto Serif JP', 'Hiragino Mincho ProN', serif;
+      --sans: 'Zen Kaku Gothic New', 'Hiragino Kaku Gothic ProN', sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--serif);
+      font-size: 17px;
+      line-height: 1.95;
+      min-height: 100vh;
+    }
+
+    /* ─── Header ─── */
+    .hero {
+      position: relative;
+      text-align: center;
+      padding: 100px 20px 80px;
+      background: linear-gradient(180deg, #1a2a4a 0%, #0f1a2f 100%);
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 30%, rgba(120,180,255,0.15) 0%, transparent 70%);
+    }
+    .hero-title {
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 5vw, 3.2rem);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #ffffff;
+      text-shadow: 0 2px 20px rgba(100,160,255,0.3);
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .hero-sub {
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      color: #b0c4de;
+      letter-spacing: 0.15em;
+    }
+    .hero-line {
+      width: 60px; height: 1px;
+      background: var(--gold);
+      margin: 28px auto 0;
+    }
+
+    /* ─── Digest Carousel ─── */
+    .carousel-wrap {
+      background: linear-gradient(180deg, #0f1a2f 0%, #0a0e18 100%);
+      padding: 24px 0 20px;
+      overflow: hidden;
+    }
+    .carousel-track {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      padding: 0 calc((100vw - min(85vw, 600px)) / 2);
+      scrollbar-width: none;
+    }
+    .carousel-track::-webkit-scrollbar { display: none; }
+    .carousel-slide {
+      flex: 0 0 min(85vw, 280px);
+      scroll-snap-align: center;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      transition: transform 0.2s;
+      aspect-ratio: 3/2;
+    }
+    .carousel-slide:active { transform: scale(0.97); }
+    .carousel-slide img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .carousel-caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.85));
+      padding: 28px 12px 10px;
+      color: #fff;
+      font-size: 0.85rem;
+      font-family: var(--serif);
+      line-height: 1.4;
+    }
+    .carousel-ch {
+      display: inline-block;
+      font-size: 0.7rem;
+      color: var(--gold);
+      margin-right: 6px;
+      font-family: var(--sans);
+      letter-spacing: 0.06em;
+    }
+    .carousel-dots {
+      text-align: center;
+      padding-top: 12px;
+    }
+    .carousel-dot {
+      display: inline-block;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      margin: 0 4px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+    }
+    .carousel-dot.active {
+      background: var(--gold);
+      transform: scale(1.3);
+    }
+    @media (min-width: 600px) {
+      .carousel-slide { flex: 0 0 280px; }
+      .carousel-track { padding: 0 calc((100vw - 900px) / 2); gap: 18px; }
+    }
+
+    /* ─── Navigation ─── */
+    .nav-bar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,10,15,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--chapter-border);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      overflow-x: auto;
+      font-family: var(--sans);
+      font-size: 0.8rem;
+    }
+    .nav-bar .nav-title {
+      color: var(--gold);
+      font-weight: 700;
+      white-space: nowrap;
+      margin-right: 8px;
+    }
+    .nav-bar a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      white-space: nowrap;
+      padding: 4px 10px;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    .nav-bar a:hover {
+      color: var(--accent);
+      background: rgba(74,158,255,0.1);
+    }
+
+    /* ─── TOC ─── */
+    .toc {
+      max-width: 700px;
+      margin: 60px auto 40px;
+      padding: 0 20px;
+    }
+    .toc h3 {
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .toc-item {
+      display: flex; align-items: center; gap: 16px;
+      padding: 14px 18px;
+      color: var(--text-primary);
+      text-decoration: none;
+      border-left: 2px solid var(--chapter-border);
+      transition: all 0.25s;
+      font-family: var(--sans);
+      font-size: 0.95rem;
+    }
+    .toc-item:hover {
+      border-color: var(--accent);
+      background: rgba(74,158,255,0.04);
+      padding-left: 24px;
+    }
+    .toc-num {
+      font-size: 0.75rem;
+      color: var(--accent-dim);
+      font-weight: 700;
+      min-width: 20px;
+    }
+
+    /* ─── Characters ─── */
+    .characters {
+      max-width: 700px;
+      margin: 40px auto 60px;
+      padding: 0 20px;
+    }
+    .characters h3 {
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+    .char-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+    }
+    .char-card {
+      background: var(--bg-card);
+      border: 1px solid var(--chapter-border);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .char-name {
+      font-family: var(--sans);
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .char-meta {
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      color: var(--accent);
+      margin-bottom: 8px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .char-meta span {
+      background: rgba(74,158,255,0.1);
+      padding: 1px 8px;
+      border-radius: 4px;
+    }
+    .char-appearance {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 6px;
+      border-left: 2px solid var(--chapter-border);
+      padding-left: 10px;
+    }
+    .char-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ─── Divider ─── */
+    .section-divider {
+      width: 40px; height: 1px;
+      background: var(--chapter-border);
+      margin: 0 auto;
+    }
+
+    /* ─── Chapter ─── */
+    .chapter {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 80px 20px;
+      border-top: 1px solid var(--chapter-border);
+    }
+    .chapter-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .chapter-number {
+      font-family: var(--sans);
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      color: var(--accent-dim);
+      display: block;
+      margin-bottom: 8px;
+    }
+    .chapter-title {
+      font-family: var(--serif);
+      font-size: clamp(1.3rem, 3vw, 1.8rem);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    .chapter-image {
+      margin: 0 -20px 40px;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--chapter-border);
+    }
+    .chapter-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+      opacity: 0.92;
+    }
+    .chapter-body p {
+      margin-bottom: 1.2em;
+      text-indent: 1em;
+      text-align: justify;
+    }
+    .chapter-body p:empty {
+      display: none;
+    }
+
+    /* ─── Footer ─── */
+    .footer {
+      text-align: center;
+      padding: 60px 20px;
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      border-top: 1px solid var(--chapter-border);
+    }
+
+    /* ─── Reading mode toggle ─── */
+    .mode-toggle {
+      position: fixed; bottom: 20px; right: 20px; z-index: 200;
+      background: var(--bg-card);
+      border: 1px solid var(--chapter-border);
+      color: var(--text-secondary);
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      padding: 8px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mode-toggle:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+
+    /* --- TTS Read Aloud --- */
+    .tts-fab {
+      position: fixed; bottom: 80px; right: 20px; z-index: 200;
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--accent); color: #fff; border: none;
+      font-size: 22px; cursor: pointer;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+      transition: all 0.3s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .tts-fab:hover { transform: scale(1.1); }
+    .tts-fab.speaking { background: #e74c3c; animation: tts-pulse 1.5s infinite; }
+    @keyframes tts-pulse {
+      0%,100% { box-shadow: 0 4px 16px rgba(231,76,60,0.4); }
+      50% { box-shadow: 0 4px 24px rgba(231,76,60,0.7); }
+    }
+    .tts-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+      background: rgba(20,20,30,0.95); backdrop-filter: blur(12px);
+      border-top: 1px solid var(--chapter-border);
+      padding: 10px 16px; display: none;
+      align-items: center; gap: 10px;
+      font-family: var(--sans); font-size: 0.85rem;
+    }
+    .tts-bar.active { display: flex; flex-wrap: wrap; }
+    .tts-bar button {
+      background: none; border: 1px solid var(--text-secondary);
+      color: var(--text-primary); border-radius: 6px;
+      padding: 6px 12px; cursor: pointer; font-size: 0.8rem;
+      white-space: nowrap; transition: all 0.2s;
+    }
+    .tts-bar button:hover { border-color: var(--accent); color: var(--accent); }
+    .tts-bar .tts-info {
+      flex: 1; color: var(--text-secondary);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      min-width: 80px;
+    }
+    .tts-bar .tts-speed {
+      display: flex; align-items: center; gap: 4px;
+      color: var(--text-secondary); font-size: 0.75rem;
+    }
+    .tts-bar .tts-speed input { width: 60px; accent-color: var(--accent); }
+    body.light .tts-bar {
+      background: rgba(245,245,240,0.95); border-top-color: #ddd;
+    }
+    body.light .tts-bar button { border-color: #999; color: #333; }
+    body.light .tts-bar .tts-info { color: #666; }
+
+    /* ─── Light mode ─── */
+    body.light {
+      --bg-primary: #f5f0e8;
+      --bg-secondary: #ebe5d9;
+      --bg-card: #fff;
+      --text-primary: #2a2a2a;
+      --text-secondary: #6a6a6a;
+      --chapter-border: #d5cfc3;
+      --accent: #2563eb;
+      --accent-dim: #6b9eff;
+      --gold: #8a6d2b;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 600px) {
+      body { font-size: 15px; }
+      .chapter { padding: 50px 16px; }
+    }
+
+    /* ─── Scroll progress ─── */
+    .scroll-progress {
+      position: fixed; top: 0; left: 0; z-index: 200;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      width: 0%;
+      transition: width 0.1s;
+    }
+  </style>
+</head>
+<body>
+  <div class="scroll-progress" id="progress"></div>
+
+  <header class="hero">
+    <h1 class="hero-title">魔法学校への旅</h1>
+    <p class="hero-sub">GENERATED WITH LOCAL AI — OLLAMA + STABLE DIFFUSION</p>
+    <div class="hero-line"></div>
+  </header>
+
+  <nav class="nav-bar">
+    <span class="nav-title">目次</span>
+    <a href="#chapter-1">第1章</a><a href="#chapter-2">第2章</a><a href="#chapter-3">第3章</a><a href="#chapter-4">第4章</a><a href="#chapter-5">第5章</a><a href="#chapter-6">第6章</a><a href="#chapter-7">第7章</a><a href="#chapter-8">第8章</a><a href="#chapter-9">第9章</a><a href="#chapter-10">第10章</a>
+  </nav>
+
+  <div class="toc">
+    <h3>— 目次 —</h3>
+        <a href="#chapter-1" class="toc-item"><span class="toc-num">1</span><span class="toc-label">新学期の始まり</span></a>
+        <a href="#chapter-2" class="toc-item"><span class="toc-num">2</span><span class="toc-label">魔法の校舎に初登校</span></a>
+        <a href="#chapter-3" class="toc-item"><span class="toc-num">3</span><span class="toc-label">クラスメートとの出会い</span></a>
+        <a href="#chapter-4" class="toc-item"><span class="toc-num">4</span><span class="toc-label">魔法実技課での試練</span></a>
+        <a href="#chapter-5" class="toc-item"><span class="toc-num">5</span><span class="toc-label">秘密の図書館</span></a>
+        <a href="#chapter-6" class="toc-item"><span class="toc-num">6</span><span class="toc-label">学園の怪事件</span></a>
+        <a href="#chapter-7" class="toc-item"><span class="toc-num">7</span><span class="toc-label">魔法使いの試験</span></a>
+        <a href="#chapter-8" class="toc-item"><span class="toc-num">8</span><span class="toc-label">友達との絆</span></a>
+        <a href="#chapter-9" class="toc-item"><span class="toc-num">9</span><span class="toc-label">魔法学校の秘密</span></a>
+        <a href="#chapter-10" class="toc-item"><span class="toc-num">10</span><span class="toc-label">冬の魔法祭り</span></a>
+  </div>
+
+  <div class="characters">
+    <h3>— 登場人物 —</h3>
+    <div class="char-grid">
+      <div class="char-card">
+        <div class="char-name">ユウキ</div>
+        <div class="char-meta"><span>主人公</span><span>12歳</span></div>
+        <div class="char-appearance">淡い金色の髪と青い目。魔法使いの制服を着ていて、首には大切な家族からもらったペンダント。</div>
+        <div class="char-desc">冒険心旺盛で勇敢</div>
+      </div>
+      <div class="char-card">
+        <div class="char-name">アリサ</div>
+        <div class="char-meta"><span>サブキャラ</span><span>13歳</span></div>
+        <div class="char-appearance">短い茶色の髪と緑色の目。優しそうな表情をした少女。</div>
+        <div class="char-desc">賢くて親切</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <main>
+
+    <section class="chapter" id="chapter-1">
+      <div class="chapter-header">
+        <span class="chapter-number">第1章</span>
+        <h2 class="chapter-title">新学期の始まり</h2>
+      </div>
+      
+      <div class="chapter-body">
+        <p>第1章　新学期の始まり</p>
+
+        <p>朝日が校庭に差し込む。鳥のさえずりと制服の擦れる音。青い空、澄んだ風、春の暖かさ。校門を開け放った玄関から明るい光線が漏れ出し、教室の中を照らす。</p>
+
+        <p>「ユウキ、早くよ」とアリサが待つ。</p>
+        <p>「うん」彼は黒い鞄に手をかけた。「準備できた？」</p>
+
+        <p>二人の瞳には、新学期への期待と少しの緊張が混ざる。制服の袖を捲って腕時計を見ると、七時に迫っていた。</p>
+
+        <p>木々の中から聞こえる鳥たちの合唱。静かな通りは人気もなく、遠くで犬が吠えている。校舎に近づくにつれ、子供達の笑い声や談話が耳を打つ。</p>
+
+        <p>教室に入り込むと、既に多くの友人たちが席についていた。新しいクラスメイトたちとの初対面。</p>
+        <p>「ユウキさん、アリサさん」と一人の少女は挨拶。「私たちも魔法学校に入学しました」</p>
+
+        <p>顔見知りでもない彼らへ微笑みを返す。</p>
+
+        <p>廊下から聞こえる教師の声。授業が始まる。教室に入ると大きな窓が壁一面を取り囲んでいた。</p>
+        <p>「皆、ようこそ」と先生が話しだした。「今日は魔法の初級クラスから始めましょう」</p>
+
+        <p>生徒たちに向けられた言葉は魔法学校への歓迎となる。新しい友人との出会いもまた新たな冒険へと繋がる。</p>
+
+        <p>教室を見渡すと、四隅には魔力を供給する水晶玉や光る星型のオブジェがある。</p>
+        <p>「今日から皆で魔法を学びます」と先生は言った。「最初に試してみましょう」</p>
+        <p>彼女たち全員が椅子を取り囲む円形になった。窓からの日差しもまた、その光景を柔らかく包んだ。</p>
+
+        <p>ユウキとアリサの手にはペンダントが輝いている。</p>
+        <p>「皆で力を一つにする」と先生は言った。「始める時は深呼吸をして」</p>
+
+        <p>静寂の中で息を吸い込む。微かな鼓動を聞きながら彼女たちは口を開いた。</p>
+        <p>「魔法、解け」</p>
+        <p>そして、それぞれの視線が交差し合う。</p>
+
+        <p>窓から見える空へと向かい、風に乗って魔力が広がるような感覚があった。静寂の中での小さな息遣いに耳を傾ける。</p>
+
+        <p>教室は静かである。</p>
+        <p>微かな笑みが浮かんだ唇。その瞬間の魔法への畏れと喜びを感じていた。</p>
+
+        <p>青空からの陽光が、窓ガラスに反射して細かい粒子となり飛散するように見える。新たな冒険が始まったばかりだ。</p>
+        <p>新学期の始まりは新しい友人や可能性へ繋がる。ユウキたち魔法使いとしてこれからも学び続ける道程。</p>
+
+        <p>教室に戻りながら、彼女たちは静かに微笑んだ。</p>
+        <p>「今日から私たちの旅が始まるね」とアリサが言った。「魔法学校で何ができるのか楽しみだ」</p>
+        <p>春の風は新学期への期待と、小さな冒険心を運んでいた。</p>
+      </div>
+    </section>
+    <section class="chapter" id="chapter-2">
+      <div class="chapter-header">
+        <span class="chapter-number">第2章</span>
+        <h2 class="chapter-title">魔法の校舎に初登校</h2>
+      </div>
+      
+      <div class="chapter-body">
+        <p>第2章　魔法の校舎に初登校</p>
+
+        <p>薄い霧が街を包み、朝日がゆっくりと昇りゆく。遠くで車のエンジン音が聞こえる。ユウキは窓から外を見やる。青白い光の中で、学校までの道がぼんやりと浮かび上がる。</p>
+
+        <p>「出発だよ」</p>
+
+        <p>アリサに促されて玄関に出ると、ペンダントが微かな揺らめきを示す。彼女も同じようにその輝きを感じていたのだろう。</p>
+        <p>「今日はどんな授業があるのかな？」</p>
+
+        <p>ユウキは歩みながらそう尋ねた。</p>
+
+        <p>「魔法の理論と実技でしょう」とアリサ。「先輩から詳しい話を聞けたらいいですね」</p>
+
+        <p>二人が校門をくぐったとき、風に乗って不思議な音色がかすかに耳を打つ。ユウキは足を止めた。</p>
+        <p>「何だ？」</p>
+
+        <p>「鳥の鳴き声？」アリサも首を傾げた。</p>
+
+        <p>その瞬間、ふわりと何かが二人の頭上を飛んでいった。「不思議な生き物だね」とユウキ。</p>
+
+        <p>小さな翼を持つ奇妙な生物が木々の間に現れる。銀色に輝く羽根は太陽光で踊るように揺らめき、</p>
+
+        <p>「こんにちは」と静かに囁いた。</p>
+        <p>ユウキとアリサは目を見開いてその場を固まった。</p>
+
+        <p>「私たちは、あなたたちの魔法力を使えるようにするためここへ来ました」</p>
+
+        <p>生物がそう告げると、「魔法学校では毎日新しい発見がありますよ」と続けた。「まずは自分自身との向き合い方から学んでください。あなたの心に秘められた力を引き出すことが大事です」</p>
+
+        <p>「私、何をすればいいの？」「魔法を使うには特別な準備が必要なの？」アリサが目を輝かせながら尋ねると、「ペンダントを通じて自分の感情や想念と繋がることから始めましょう」と生物は教えてくれた。</p>
+
+        <p>ユウキたちを見守る小さな生き物。光に浮かぶ羽根の揺らめきの中で、二人も新たな魔法世界への扉を開いていく。</p>
+
+        <p>微かな音色と共に再び木々の中に姿を消していくその瞬間、ペンダントが暖かい温もりでユウキの胸元を包んだ。</p>
+        <p>新しい冒険が始まったばかりだ。</p>
+      </div>
+    </section>
+    <section class="chapter" id="chapter-3">
+      <div class="chapter-header">
+        <span class="chapter-number">第3章</span>
+        <h2 class="chapter-title">クラスメートとの出会い</h2>
+      </div>
+      
+      <div class="chapter-body">
+        <p>第3章　クラスメートとの出会い</p>
+
+        <p>朝の薄らと光る雲間に、初夏らしい暖かい日差しが射し込んでいた。教室には窓からの陽ざしが優しく照り返し、新しい一日が始まる。空気はまだ爽やかで、少し湿った匂いが鼻腔をくすぐる。</p>
+
+        <p>ユウキとアリサの二人は鞄を持ち、静かな廊下を歩き出す。足音だけ響いていた通路に徐々に声が混ざり始めると、彼らも教室へ向かうクラスメートたちとの距離を詰めていった。</p>
+        <p>「おはよう」</p>
+        <p>軽く頭を下げて挨拶をする二人の隣で、明るい笑顔と鋭さが同居する少女が通路を駆け抜けていく。その視線はどこか遠方にある何かに向いているように見えた。</p>
+
+        <p>教室の中へ足を踏み入れた瞬間、ユウキはそこで初めて多くの友人候補らに出会った。</p>
+        <p>「こんにちは」</p>
+        <p>机の前に立つクラスメートたちが一斉に手を挙げて笑顔で挨拶した。個性豊かな生徒たちの姿に心地良い新鮮さを感じ、ユウキは微笑んだ。「お早うございます」</p>
+
+        <p>教室には緑色と橙色のシャープペンシルや小説本が散らばっている。窓辺からは遠くまで見える公園で子供達が遊んでいるのが見えた。</p>
+        <p>「名前を紹介し合いましょう」</p>
+        <p>担任教師が静かな声で告げると、クラスメートたちの視線はユウキへ向けられた。「ユウキです」と短く答える。</p>
+
+        <p>隣に座るアリサも同様に自己紹介をしている。</p>
+        <p>「初対面の方々ですが、少しずつ友達になっていきましょうね」教師が微笑むと、クラスメートたちは互いの顔色を窺うように見合った。「私はカヤです」という少女は柔らかそうな黒髪に緑の目を持ち、「ミツキ」と名乗る少年には青白く光る瞳が特徴的だった。</p>
+        <p>「アリサ」</p>
+        <p>ユウキと隣合わせで話すクラスメートたちは、彼女たち自身を紹介した。「こんにちは」</p>
+
+        <p>カヤは軽い語気遣いで笑顔を見せており、「今日からよろしく」と優しげな声色で応えた。一方ミツキの目にはどこか厳しい光が宿り、「同じクラスになることを楽しみにしている」の一言だけを静かな口調で告げた。</p>
+        <p>「こんにちは、ユウキさん」「アリサさん」</p>
+
+        <p>教室は静寂を取り戻すと、それから魔法について学ぶ授業が始まった。それぞれの生徒達は机に向かい手元や額を指し示した。「自分自身との向き合い方」という初歩的なトピックで始まり、「自己探求」が語られる。</p>
+        <p>「ユウキさん」「アリサさん」</p>
+
+        <p>二人もクラスメートたちと一緒に、新たな魔法の授業に身を委ねた。</p>
+
+        <p>窓から差し込む光の中で、ユウキはペンダントに触れる。「これからの学びで何を見つけることができるか楽しみですね」と優しく微笑む彼女にはどこか温かい表情が浮かんでいた。教室全体には魔法の始まりを感じさせる緊張感と興奮が満ち溢れていく。</p>
+
+        <p>手を伸ばすユウキに、隣からアリサも笑顔で挨拶を返した。「一緒に頑張りましょうね」</p>
+        <p>それだけ言うと彼女は静かに視線を逸らし、窓ガラスの向こうにある遠い風景へ向けた。</p>
+
+        <p>天井からの光が教室全体を包み込む。ユウキとアリサは新たな学びへの扉を開きつつあった。</p>
+      </div>
+    </section>
+    <section class="chapter" id="chapter-4">
+      <div class="chapter-header">
+        <span class="chapter-number">第4章</span>
+        <h2 class="chapter-title">魔法実技課での試練</h2>
+      </div>
+      
+      <div class="chapter-body">
+        <p>第4章　魔法実技課での試練</p>
+
+        <p>教室の窓から差し込む春日なす光が、白い壁に優しく柔らかな模様を作り出す。風鈴のように軽やかに揺れるカーテン越しには、桜並木が見えた。授業が始まる頃になると廊下は静まり返る。時計の秒針が音を立てて回っているような気配。</p>
+
+        <p>ユウキとアリサは机に向かい、それぞれペンダントを取り出した。「準備OK」ユウキが笑顔で言う。</p>
+        <p>「ちょっと緊張するな〜」アリサも答えるが少し声がかすれているようだ。教室内には他の生徒たちの控えめな呼吸音だけ。</p>
+
+        <p>魔法実技課では、それぞれの学生に合った魔法スキルを学ぶ。ユウキは自分のペンダントから光線を取り出し、それを空に向かって向けた。</p>
+        <p>「これで始まるんだね」彼女の手元が細やかに動き、小さな球体を作り出していた。</p>
+
+        <p>先生が教室に入ってきた。「今日は実際に自分たちの魔法を試すチャンスだ。各自思い描いたイメージ通りに作るためには集中力が必要だよ」</p>
+
+        <p>生徒たちは黙って頷きながらペンダントを見つめた。</p>
+        <p>アリサは静かに目を閉じて深呼吸する。</p>
+
+        <p>ユウキが最初の魔法スキルを開発しようと、心の中で言葉を紡いだ。「光。輝け」と呟いた瞬間、彼女の目の前に小さな球体が浮かび上がった。それは淡く金色の色調で、春日のような暖かな光に満ちていた。</p>
+        <p>「うわあ！」ユウキは感嘆の声を上げた。</p>
+
+        <p>周りからの視線を感じながらも、ユウキはその魔法と向き合っていた。「この光が未来への道しるべになる」と彼女は口に出さずに思っている。球体に触れると、それはゆっくりと前方へ進み始めた。まるで導きの灯りのように静かに舞い上がり、教室全体を包み込むように拡大した。</p>
+
+        <p>「ユウキちゃんすごい！」隣の席からアリサが声を上げた。「私もやってみる」彼女は自分自身に向かい合い、自分のペンダントと繋がっていることを感じながら呟いた。</p>
+        <p>「風よ。そっと吹いて」</p>
+
+        <p>微かな音と共に小さな渦状の形を作り出す風。それは教室全体に広がっていった。</p>
+
+        <p>ユウキはアリサを見つめると微笑んだ。「一緒に魔法を学んでいこうね」と言った。その言葉には、共感と友人への思いやりがあった。</p>
+        <p>「そうだよね」アリサも笑顔で返した。</p>
+
+        <p>次々と生徒たちが自分自身の魔法力を開花させていった。</p>
+        <p>教室の中は様々な色合いに満ち溢れ、それぞれ独特な個性を持つ光や風を放っていた。ユウキの金色の輝きと共に他の学生達の力も互い違いに織り交ぜて一つの美しい模様を作っている。</p>
+
+        <p>春日が差す窓辺から静かに入ってくるのは、教室の中での魔法と学びとの邂逅によって生まれた暖かな空気だった。</p>
+      </div>
+    </section>
+    <section class="chapter" id="chapter-5">
+      <div class="chapter-header">
+        <span class="chapter-number">第5章</span>
+        <h2 class="chapter-title">秘密の図書館</h2>
+      </div>
+      
+      <div class="chapter-body">
+        <p>第5章　秘密の図書館</p>
+
+        <p>春日が柔らかく差し込む古い学校。教室から溢れ出す暖かな光と、芝生に覆われた校舎周辺からは草木の緑豊かな香りが漂っている。ユウキは友達と一緒に魔法実技課を終え、一人だけ図書館に向かう道を選んだ。</p>
+
+        <p>「アリサ、僕これから秘密の図書館を探しに行くよ」</p>
+        <p>「もうそんな時間？」</p>
+        <p>黒い鞄にペンダントを収めながらユウキは返事する。「そう。さっそく学びたいな」</p>
+
+        <p>彼女の笑顔が記憶の中で揺らぐように、薄暗い通路の先へと進む。</p>
+
+        <p>図書館には人がいない。</p>
+        <p>静寂だけが広がり、音も光もない。</p>
+        <p>ただ、古い本たちが積み重ねられた架から、塵埃の舞う微かな音と紙鳴りが聞こえる。ユウキは冷たい壁に手を当て、その感触を感じる。</p>
+
+        <p>「ここにあるって聞いたよ」</p>
+        <p>彼女の声がかすかに響く。</p>
+        <p>図書館奥へ進む足取りには緊張感があり、空気が重い。</p>
+
+        <p>見慣れた本の山から異質な影が浮かび上がっている。ユウキはその向こうへと視線を送りながら静かな手つきでそれを引き出す。古い革表紙に薄汚れ、金色のタイトルが微塵にもれていた。「魔法の基礎知識」それ以外には何も書かれていなかった。</p>
+
+        <p>「これが？」</p>
+        <p>小さな呟きとともに本を開く。</p>
+        <p>ページは茶色になりページは脆いほどだが、その内容とは対照的に新しい情報で満ち溢れている。ユウキは目を細め、初めて学ぶ魔法の知識に心地良い驚愕を感じる。</p>
+
+        <p>「おっさん、これを閉じてもいい？」</p>
+
+        <p>彼女が図書館奥から現れると笑顔を見せる。</p>
+        <p>アリサは眉間にしわを作りながらユウキと共に本を扱う様子を見て頷いた。「秘密の図書館だよ。これだけじゃなきゃ開けないって」</p>
+        <p>「あー、そうだったね」</p>
+
+        <p>古い時計が音もなく進み、その光に二人は微かに微笑んだ。</p>
+
+        <p>彼女たちの視線は本から離れない。</p>
+        <p>ユウキはそれを胸の中で大切にするように握りしめる。学びの道はこれからも続く。</p>
+      </div>
+    </section>
+    <section class="chapter" id="chapter-6">
+      <div class="chapter-header">
+        <span class="chapter-number">第6章</span>
+        <h2 class="chapter-title">学園の怪事件</h2>
+      </div>
+      
+      <div class="chapter-body">
+        <p>第6章　学園の怪事件</p>
+
+        <p>日差しは薄らと曖昧な影を作り、風鈴がそよぐ音だけが校庭に響き渡る。木々から落ち葉の香りが漂い、地面を撫でる微かな冷たさを感じさせる季節だった。</p>
+
+        <p>「ユウキ君、学校のどこかで怪しい出来事が起こっているらしいよ」</p>
+        <p>アリサは小声で囁くように話し始めた。青空を見上げて深呼吸した後、二人は手を取り合って体育館裏へと歩を進めた。</p>
+        <p>古い木枠の窓から覗き込むと、中にはいつもより多くの人が詰めかけていた。</p>
+
+        <p>「何が起こっているんだ？」</p>
+
+        <p>ユウキは図書室脇で不審な音を感じて足早に近寄る。そこでは本棚の隙間から突然大量の古文書が溢れ出し、その一部が床を滑るように転がっていた。</p>
+        <p>「アリサ！ここだ！」</p>
+        <p>二人ともそっと地面を這うようにして覗き込むと、一冊だけ開かれた古い魔法に関する図鑑があり、そこには奇妙な記号や文字が書かれている。</p>
+
+        <p>「これは……」</p>
+        <p>ユウキはそのページに手を伸ばした。指先で触れる温もりの中から魔力のようなものが伝わってくるようだった。</p>
+        <p>彼女は言葉を探し求めながら、アリサの顔を見つめ返す。</p>
+        <p>「何者かがここで何かを隠そうとしているんだ」</p>
+
+        <p>二人とも静寂に耳を傾けた。音もなく風が通り過ぎる感覚だけがあった。</p>
+
+        <p>「ユウキ君、見て！」</p>
+        <p>アリサは図書室脇の隙間から一枚の古い紙切れを見つけ出し微かに笑みを浮かべて見せる。</p>
+        <p>「これ、手書きで書いてあるね。『秘密』って……」</p>
+
+        <p>二人がその場所を見つめていると、一瞬だけ天井からの光が歪んだように揺らぐ。</p>
+
+        <p>ユウキは深い呼吸をして、彼女の目を見て言った。「アリサ、一緒に解決しよう」</p>
+        <p>その言葉を聞いてアリサも頷いた。そして手を取り合って、二人でこの謎の探究が始まった。</p>
+        <p>古い図書館内の空気が震え始める瞬間だった。</p>
+
+        <p>彼らはその夜、秘密図書室を探訪した後、証拠を見つけるために校舎を捜索する準備を進めた。月光が薄く地面を照らし、風鈴の音だけが静寂の中響き渡る。</p>
+        <p>ユウキはアリサと並んで歩み始めると、「何かを感じてる？」</p>
+        <p>彼女もまた「うーん…」と首を傾げる。</p>
+
+        <p>突然手探りで前方に進む。</p>
+        <p>「ここだ！」</p>
+
+        <p>それは体育館の更衣室裏。扉が開け放たれ、薄暗さの中から微かに燐光色の輝きが漏れていた。二人はその部屋へ足音静かに入ると、そこには大量の古文書と不審な装置があり、何か始末をつけようとしている痕跡があった。</p>
+        <p>「誰も教えてくれなかった、ユウキ君…これが魔法学校への入り口だったんだよ」</p>
+
+        <p>彼女が囁きかける言葉を聞きながら、ユウキはその部屋を見回す。月光に照らされた古い本の山から漂う微かな匂いがあり、それが魔法使いとしての自分たちの新たな道しるべとなりそうだった。</p>
+        <p>二人の背後には風鈴が揺れていて、今度はより深い音色で響き渡った。</p>
+
+        <p>そして彼女が手紙を握り締めると、「ユウキ君…一緒にこの謎を解くために頑張ろうね」</p>
+
+        <p>静寂の中、二人の顔に微笑みが浮かぶ。</p>
+        <p>月光と風鈴の音色だけが残る。</p>
+      </div>
+    </section>
+    <section class="chapter" id="chapter-7">
+      <div class="chapter-header">
+        <span class="chapter-number">第7章</span>
+        <h2 class="chapter-title">魔法使いの試験</h2>
+      </div>
+      
+      <div class="chapter-body">
+        <p>第7章　魔法使いの試験</p>
+
+        <p>朝露が地面に光る早朝、校庭には静寂が広がっていた。微かな風が吹き抜けると、草木の葉から水滴が舞い上がり、空へ溶け込んでいくようだ。教室ではすでに生徒たちが集まり始めている。窓ガラスに映るその景色は、淡く青みを帯びた光の中で揺れていた。</p>
+
+        <p>ユウキとアリサの二人は並んで座りながら、緊張した様子で試験開始を待つ。天井からは電気が点じられていたが、外からの日差しが窓からさし込んでくるため、教室全体に柔らかな光が満ちている。</p>
+
+        <p>「ユウキ君、大丈夫？」</p>
+        <p>アリサの優しい声が響く。</p>
+
+        <p>ユウキは頷き返す。彼女の手元には、小さなペンダントチャームが揺れていた。</p>
+        <p>「もちろんだよ」</p>
+        <p>二人とも魔法力と知識を問う定期試験に備えてきたつもりだった。</p>
+
+        <p>教室の扉が開いて、教員らしき人物が入ってくる。その目は鋭く光り輝き、厳格さを感じさせる。彼女は紙切れ一枚持参し、生徒たちに向かって告げる。</p>
+        <p>「今日は魔法力と知識を確認する試験です」</p>
+        <p>言葉の響きに静寂が戻る。</p>
+
+        <p>ユウキとアリサは互いを見合わせた後、深呼吸をして前向きな表情を取り繕う。それぞれ手元のペンダントチャームへ視線を落とした。</p>
+        <p>「頑張ろうね」と二人で口にする。</p>
+
+        <p>試験が始まり、最初に出されたのは簡単なものだったが、その次の問題は意外と難易度が高いものばかり。ユウキは眉間に皺を寄せながらも挑戦し続ける姿勢を見せた。一方のアリサは静かに解答しながら、時折ペンダントチャームへ視線を落とした。</p>
+        <p>「これで大丈夫だよ」</p>
+        <p>小さな声が漏れる。</p>
+
+        <p>時間と共に問題は難解になっていく。答えを見つけ出すためには魔法力と知識だけでなく、直感や洞察力を駆使する必要があった。ユウキの髪に光がきらめくように差し込む中、彼女たちは互いを思いやりながら最後まで向き合い続けた。</p>
+
+        <p>試験終了時間が来ると、教室は静寂を取り戻した。</p>
+        <p>「終わったな」</p>
+        <p>アリサが口元から笑みを浮かべる。ユウキもまた息を吐き出すようにして安堵の表情を見せていた。</p>
+
+        <p>二人とも手の中にあるペンダントチャームへと視線を向けた後、互いを見つめ合う。</p>
+        <p>「次は何をするんだ？」</p>
+        <p>アリサが静かな口調で尋ねる。ユウキは優しく微笑んで頷いた。</p>
+        <p>その場面の光景は微風に揺れる草木のように柔らかく、空へと溶け込んでいくようだった。</p>
+      </div>
+    </section>
+    <section class="chapter" id="chapter-8">
+      <div class="chapter-header">
+        <span class="chapter-number">第8章</span>
+        <h2 class="chapter-title">友達との絆</h2>
+      </div>
+      
+      <div class="chapter-body">
+        <p>第8章　友達との絆</p>
+
+        <p>秋の風が軽やかに吹き抜けていく。日差しも柔らかな色合いになり、青空には薄い雲が流れていた。教室の中は静けさだけではない暖かい雰囲気が満ちている。</p>
+
+        <p>「ユウキさん、これ見てみてよ」</p>
+
+        <p>アリサの声に振り向くと、彼女の手元で小さな魔法球を輝かせていた。</p>
+        <p>青白い光が揺れていた。それは微かな音もなく周辺から吸収され、静寂の中で不思議な感覚を作り出していた。</p>
+
+        <p>「すごいね」</p>
+
+        <p>ユウキは目を見開きながら言った。「あいつらも見てる？」「うん」とアリサの言葉に続いてクラスメートたちが次々と近づいてくる。</p>
+        <p>彼ら一人ひとりから、それぞれ違う魔法球を出して光らせ始める。どれもうつくしい色合いで揺れていた。</p>
+
+        <p>「ユウキさんのこと知ってるよ」</p>
+
+        <p>隣で声をかけてきたのはリコだ。「いつも元気そうにしてるけど本当は大変だったりする？」</p>
+        <p>彼女が真剣な顔をして言うので、ユウ Кириллица, давайте продолжим на японском языке.</p>
+
+        <p>第8章　友達との絆</p>
+
+        <p>秋の風に軽やかな音色を紡ぎながら、教室は静寂と暖かい空気で満ちている。窓ガラスからは青い天気が差し込んでくる。</p>
+
+        <p>「ユウキさん、これ見てみてよ」</p>
+
+        <p>アリサが手元から小さな魔法球を作り出し光らせていた。「あいつもやってる？」という声に反応して周りを見回すとクラスメートたちもそれぞれのボールを出している。</p>
+        <p>青白い色合いが揺れていた。</p>
+
+        <p>「すごいね」ユウキは思わず言った。アリサとの距離感、信頼関係を感じさせる会話の中で、「うん」とだけ答える彼女。「あいつらも見てる？」と尋ねるとクラスメートたちから次々に声が返ってくる。</p>
+        <p>それぞれの魔法球を手元で光らせていた。</p>
+
+        <p>「ユウキさんのこと知ってるよ」</p>
+
+        <p>隣でおずおzo</p>
+      </div>
+    </section>
+    <section class="chapter" id="chapter-9">
+      <div class="chapter-header">
+        <span class="chapter-number">第9章</span>
+        <h2 class="chapter-title">魔法学校の秘密</h2>
+      </div>
+      
+      <div class="chapter-body">
+        <p>第9章　魔法学校の秘密</p>
+
+        <p>秋の夜長、月明かりが校舎を優しく包み込む。石畳の通路では足音が響き渡り、遠くで鳴る風鈴が静寂と調和する旋律を作り出していた。ユウキはアリサとともにこの学園深部へと向かう道すじを進む。</p>
+
+        <p>「ここに何かあるよ」というアリサの声と共に二人は小さな魔法球を放つ。それは白い光線となって、壁一面が隠し扉となる部分を探り当てる。ユウキは息を呑みながらその場所を見つめ、心臓の鼓動を感じる。</p>
+
+        <p>「触ってみて」とアリサが優しく促す。</p>
+        <p>静かな音とともに石が軋む。光に照らされた内側には古い書物と魔法具が大量に詰まった宝箱のようなものがあった。「何これ？」とユウキは小声で囁く。</p>
+
+        <p>「これは、学園の秘密を解き明かす鍵かもしれない」とアリサもまたそっと答えた。</p>
+        <p>二人とも静寂の中、古い紙切れから透けるような文字を見つめている。そこには魔法学校の成り立ちや目的が詳細に記されていた。彼女たちにとってこれは歴史そのものであり、新たな試練への道しるべでもあった。</p>
+
+        <p>「私たちもここで学んだ魔法はただ単なる遊びじゃなくて、もっと大きな役割を果たすための力なんだ」とユウキは静かにはっとする。</p>
+        <p>するとアリサが微笑んで頷いた。「そうね。だけど二人で一緒に進むなら怖くないわ」</p>
+        <p>月光に照らされた二人の影は長い道のりを通じて手を取り合い、互いを信じる絆を感じながら学園深層へとさらに足を進め始める。</p>
+
+        <p>空気の中で浮遊する魔法具が微かな音色とともに揺れる。それはまるで遠くから聞こえる楽器のような不思議な響きだった。</p>
+        <p>「ここに来る前は、これほどまで深い秘密があるなんて想像もしなかったわ」とアリサの顔には複雑な表情が浮かぶ。</p>
+
+        <p>ユウキもまた深呼吸をしながら言葉にする。「でもこれからどう進むべきなのか迷うよね」</p>
+        <p>すると二人が見つめ合う先に、古い魔術書の一ページだけ光る。その一文は静寂の中で特別な音色のように響いた。</p>
+        <p>「冒険心と友情の証となる試練を乗り越えよ」</p>
+
+        <p>月明かりの中、学園深層部では未知なる魔法が息づき始めようとしている。</p>
+        <p>ユウキとアリサはその光に包まれながらも互いを見つめ合い、新たな旅への足取りが始まる。そして彼らの前に広がる新しい道程を照らす月明かりは二人の友情や冒険心を象徴するかのように輝き続ける。</p>
+
+        <p>魔法学校深層部では静寂と光に包まれた秘密が語り継がれ、新たな試練への準備が始まった。</p>
+      </div>
+    </section>
+    <section class="chapter" id="chapter-10">
+      <div class="chapter-header">
+        <span class="chapter-number">第10章</span>
+        <h2 class="chapter-title">冬の魔法祭り</h2>
+      </div>
+      
+      <div class="chapter-body">
+        <p>第10章　冬の魔法祭り</p>
+
+        <p>雪が舞い散る夜、学校全体に魔法の灯りが揺れる。白一色の闇の中で、赤と青の炎が浮遊する。音楽は心地よい旋律から突然激しいドラムのリズムへと変わる。静寂の中に鳴り響く鼓動。</p>
+
+        <p>ユウキとアリサは祭り広場で出会う。「寒いね」とアリサ。</p>
+        <p>「そうじゃない、暖かい魔法が感じられる」</p>
+        <p>二人は手を繋いで歩み始める。雪の粒が肌に触れる感触。冷たい夜風が髪をなぶる。</p>
+
+        <p>古い建物の中庭には円形ステージがあり、そこでは生徒たちが踊り歌う。</p>
+        <p>「見て！ユウキ！」</p>
+        <p>アリサは舞台へ向かって指差す。「何か特別な瞬間が始まる」という言葉に込められた期待。二人の視線は同時に一人の魔法使いに向く。</p>
+
+        <p>彼女は白いマントを纏い、光る杖を持つ。透明な声が響き渡り、「皆様、今日は一年に一度の大切な祭りです」。</p>
+        <p>音楽と歌と拍手が一つになって広場全体を包み込む。「冬の魔法祭り」という言葉が心地よく感じられる。</p>
+
+        <p>ユウキはアリサを見つめると微笑む。彼女もまた同じように笑う。「ここに来て良かったね」</p>
+        <p>「もちろん、この友達とならもっと楽しい」</p>
+
+        <p>二人は手を取り合って舞い踊る人々の群れの中へ溶け込む。</p>
+        <p>雪が空を覆うほど静かになると、「次は何をする？」ユウキ。</p>
+
+        <p>「知らない魔法を見せて欲しい」とアリサ。</p>
+        <p>ユウキは彼女の目を見て頷く。「そうね、君に見せるべき魔法がある」</p>
+
+        <p>二人は広場の外へ出ていく。月明かりが雪を照らし、その光はまるで星屑のようにきらめいている。</p>
+
+        <p>「ここならできるわ」</p>
+        <p>ユウキは手と杖を取り出し、静かに言葉を紡ぐ。「君も一緒に」</p>
+
+        <p>アリサは首肯すると両腕を広げる。雪が舞い上がり、二人の周りに魔法の壁を作り出す。</p>
+        <p>光が輝き始めた時、「どうして？」ユウキ。</p>
+
+        <p>「これは特別な贈り物だから」</p>
+        <p>彼女は笑顔を見せると手でペンダントを指す。「君には大切な家族からのものがあるでしょう」</p>
+
+        <p>雪が舞い上がり、二人の周りに魔法の花々を作り出す。</p>
+        <p>透明な音楽と光の中で、「ありがとう」とユウキ。</p>
+
+        <p>「私たちも大切な贈り物を持っているんだよ」</p>
+        <p>アリサは笑顔を見せて続ける。「それは君と一緒に過ごす時間が永遠だと感じられるから」</p>
+
+        <p>二人の手が絡み合う。雪と月明かりで包まれた祭り広場に、魔法学校への旅路が始まった。</p>
+        <p>光の花々が風に乗って舞い上がる夜。</p>
+
+        <p>ユウキは静かに戻る。「君と出会えて良かった」</p>
+        <p>「私も同じ気持ち」</p>
+
+        <p>二人の視線があう。それぞれの中にある感情を読み取ろうとする。その瞬間が永遠に続いていくような気がする。</p>
+
+        <p>魔法学校での冒険や学びを通じて、二人は互いへの理解と信頼を深めていった。</p>
+        <p>この冬の夜には特別な何かが始まったように感じる。</p>
+        <p>雪が舞い上がり、月明かりの中で二人の影だけが揃う。</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>魔法学校への旅</p>
+    <p>Generated locally with Ollama + Stable Diffusion</p>
+  </footer>
+
+
+  <button class="tts-fab" id="ttsFab" onclick="ttsToggle()" title="Read aloud">
+    <span id="ttsFabIcon">&#x1f50a;</span>
+  </button>
+  <div class="tts-bar" id="ttsBar">
+    <button onclick="ttsPause()" id="ttsPauseBtn">&#x23f8;</button>
+    <button onclick="ttsStop()">&#x23f9;</button>
+    <button onclick="ttsPrev()">&#x23ee;</button>
+    <button onclick="ttsNext()">&#x23ed;</button>
+    <span class="tts-info" id="ttsInfo">Ready</span>
+    <span class="tts-speed">
+      <input type="range" id="ttsSpeed" min="0.5" max="2.0" step="0.1"
+             value="1.0" onchange="ttsSetSpeed(this.value)" />
+      <span id="ttsSpeedVal">1.0x</span>
+    </span>
+  </div>
+
+  <button class="mode-toggle" onclick="toggleMode()">🌗 表示切替</button>
+
+  <script>
+    // Reading mode
+    function toggleMode() {
+      document.body.classList.toggle('light');
+      localStorage.setItem('mode', document.body.classList.contains('light') ? 'light' : 'dark');
+    }
+    if (localStorage.getItem('mode') === 'light') document.body.classList.add('light');
+
+    // Scroll progress
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement;
+      const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+      document.getElementById('progress').style.width = pct + '%';
+    });
+
+    // === TTS (Web Speech API) ===
+    const synth = window.speechSynthesis;
+    let ttsChs = [], ttsI = 0, ttsRate = 1.0, ttsOn = false, ttsPd = false;
+
+    document.querySelectorAll('.chapter').forEach((sec, i) => {
+      const b = sec.querySelector('.chapter-body');
+      const t = sec.querySelector('.chapter-title');
+      if (b) ttsChs.push({
+        title: t ? t.textContent : ('Ch.' + (i+1)),
+        text: b.textContent.trim(), el: sec
+      });
+    });
+
+    function ttsToggle() {
+      if (!synth) { alert('Speech not supported'); return; }
+      if (ttsOn) { ttsStop(); return; }
+      const sy = window.scrollY + window.innerHeight / 3;
+      let cl = 0;
+      ttsChs.forEach((c, i) => { if (c.el.offsetTop <= sy) cl = i; });
+      ttsI = cl; ttsOn = true; ttsPd = false;
+      document.getElementById('ttsFab').classList.add('speaking');
+      document.getElementById('ttsFabIcon').innerHTML = '&#x23f9;';
+      document.getElementById('ttsBar').classList.add('active');
+      _ttsRead();
+    }
+
+    function _ttsRead() {
+      if (ttsI >= ttsChs.length) { ttsStop(); return; }
+      synth.cancel();
+      const ch = ttsChs[ttsI];
+      document.getElementById('ttsInfo').textContent = ch.title;
+      ch.el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      // Split by Japanese sentence endings for reliable playback
+      const sents = ch.text.match(/[^。！？
+]+[。！？]?/g) || [ch.text];
+      let si = 0;
+
+      function next() {
+        if (!ttsOn) return;
+        if (si >= sents.length) {
+          ttsI++;
+          if (ttsI < ttsChs.length) setTimeout(_ttsRead, 800);
+          else ttsStop();
+          return;
+        }
+        const u = new SpeechSynthesisUtterance(sents[si].trim());
+        u.lang = 'ja-JP'; u.rate = ttsRate;
+        const vs = synth.getVoices();
+        const jv = vs.find(v => v.lang && v.lang.startsWith('ja'));
+        if (jv) u.voice = jv;
+        u.onend = () => { si++; next(); };
+        u.onerror = () => { si++; next(); };
+        synth.speak(u);
+      }
+      next();
+    }
+
+    function ttsPause() {
+      if (!ttsOn) return;
+      if (ttsPd) {
+        synth.resume(); ttsPd = false;
+        document.getElementById('ttsPauseBtn').innerHTML = '&#x23f8;';
+      } else {
+        synth.pause(); ttsPd = true;
+        document.getElementById('ttsPauseBtn').innerHTML = '&#x25b6;';
+      }
+    }
+
+    function ttsStop() {
+      synth.cancel(); ttsOn = false; ttsPd = false;
+      document.getElementById('ttsFab').classList.remove('speaking');
+      document.getElementById('ttsFabIcon').innerHTML = '&#x1f50a;';
+      document.getElementById('ttsBar').classList.remove('active');
+      document.getElementById('ttsInfo').textContent = 'Ready';
+      document.getElementById('ttsPauseBtn').innerHTML = '&#x23f8;';
+    }
+
+    function ttsNext() { if (ttsOn && ttsI < ttsChs.length - 1) { ttsI++; _ttsRead(); } }
+    function ttsPrev() { if (ttsOn && ttsI > 0) { ttsI--; _ttsRead(); } }
+    function ttsSetSpeed(v) {
+      ttsRate = parseFloat(v);
+      document.getElementById('ttsSpeedVal').textContent = v + 'x';
+    }
+    if (synth) synth.onvoiceschanged = () => synth.getVoices();
+
+    /* ─── Carousel ─── */
+    (function() {
+      const track = document.getElementById('carouselTrack');
+      if (!track) return;
+      const dots = track.parentElement.querySelectorAll('.carousel-dot');
+      const slides = track.querySelectorAll('.carousel-slide');
+      if (slides.length < 1) return;
+      function updateDots() {
+        const sw = slides[0].offsetWidth + 14;
+        const idx = Math.round(track.scrollLeft / sw);
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      }
+      track.addEventListener('scroll', updateDots, { passive: true });
+      dots.forEach(d => d.addEventListener('click', () => {
+        const sw = slides[0].offsetWidth + 14;
+        track.scrollTo({ left: parseInt(d.dataset.idx) * sw, behavior: 'smooth' });
+      }));
+      let paused = false, timer = setInterval(() => {
+        if (paused) return;
+        const sw = slides[0].offsetWidth + 14;
+        const mx = track.scrollWidth - track.clientWidth;
+        const nx = track.scrollLeft + sw;
+        track.scrollTo({ left: nx > mx ? 0 : nx, behavior: 'smooth' });
+      }, 4000);
+      track.addEventListener('touchstart', () => { paused = true; clearInterval(timer); }, { passive: true });
+      track.addEventListener('touchend', () => {
+        paused = false;
+        timer = setInterval(() => {
+          if (paused) return;
+          const sw = slides[0].offsetWidth + 14;
+          const mx = track.scrollWidth - track.clientWidth;
+          const nx = track.scrollLeft + sw;
+          track.scrollTo({ left: nx > mx ? 0 : nx, behavior: 'smooth' });
+        }, 4000);
+      }, { passive: true });
+    })();
+
+  </script>
+</body>
+</html>
